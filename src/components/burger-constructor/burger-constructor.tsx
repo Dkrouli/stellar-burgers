@@ -1,5 +1,5 @@
 import { FC, useMemo } from 'react';
-import { TConstructorIngredient } from '@utils-types';
+import { TConstructorIngredient, TOrder } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
 import {
@@ -9,7 +9,7 @@ import {
 import {
   createOrder,
   clearOrder,
-  selectOrderByNumber,
+  selectOrder,
   selectOrderLoading
 } from '../../services/slices/orderSlice';
 import { selectUser } from '../../services/slices/userSlice';
@@ -18,10 +18,17 @@ import { useNavigate } from 'react-router-dom';
 export const BurgerConstructor: FC = () => {
   const constructorItems = useSelector(getConstructorItems);
   const orderRequest = useSelector(selectOrderLoading);
-  const orderModalData = useSelector(selectOrderByNumber);
+  const newOrderData = useSelector(selectOrder);
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const navigate = useNavigate();
+
+  const orderModalData: TOrder | null = newOrderData
+    ? {
+        ...newOrderData,
+        ingredients: [] // подставляем пустой массив
+      }
+    : null;
 
   const onOrderClick = () => {
     if (!user) {
@@ -35,7 +42,14 @@ export const BurgerConstructor: FC = () => {
       constructorItems.bun._id
     ];
 
-    dispatch(createOrder(ids)).then(() => dispatch(resetConstructor()));
+    dispatch(createOrder(ids))
+      .unwrap()
+      .then(() => {
+        dispatch(resetConstructor());
+      })
+      .catch((error) => {
+        console.error('Ошибка при создании заказа:', error);
+      });
   };
 
   const closeOrderModal = () => {

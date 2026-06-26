@@ -3,12 +3,12 @@ import { TIngredient, TConstructorIngredient } from '@utils-types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { getIngredientsApi } from '../../utils/burger-api';
 
-export interface constructorSliceInterface {
+export interface ConstructorSliceInterface {
   bun: TIngredient | null;
   ingredients: TConstructorIngredient[];
 }
 
-const initialState: constructorSliceInterface = {
+const initialState: ConstructorSliceInterface = {
   bun: null,
   ingredients: []
 };
@@ -24,7 +24,7 @@ export const constructorSlice = createSlice({
   reducers: {
     addIngredient: {
       reducer: (
-        state: constructorSliceInterface,
+        state: ConstructorSliceInterface,
         { payload }: PayloadAction<TConstructorIngredient>
       ) => {
         if (payload.type === 'bun') {
