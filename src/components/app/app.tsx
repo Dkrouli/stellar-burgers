@@ -68,6 +68,18 @@ const App = () => {
             <Route path='/' element={<ConstructorPage />} />
             <Route path='/feed' element={<Feed />} />
 
+            <Route path='/feed/:number' element={<OrderInfo />} />
+            <Route path='/ingredients/:id' element={<IngredientDetails />} />
+            <Route
+              path='/profile/orders/:number'
+              element={
+                <ProtectedRoute>
+                  <OrderInfo />
+                </ProtectedRoute>
+              }
+            />
+            <Route path='*' element={<NotFound404 />} />
+
             <Route
               path='/login'
               element={
